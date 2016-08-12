@@ -1,5 +1,6 @@
 package vk;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -92,7 +93,9 @@ public final class VkApi {
         final URL url = new URL(requestUrl);
         try (InputStream is = url.openStream()) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-            reader.lines().forEach(result::append);
+            while (reader.readLine() != null) {
+                result.append(reader.readLine());
+            }
         }
         return result.toString();
     }
@@ -117,9 +120,14 @@ public final class VkApi {
         public String build() {
             if (params.isEmpty()) return "";
             final StringBuilder result = new StringBuilder();
+            for (String key : params.keySet()){
+                result.append(key).append('=').append(params.get(key)).append('&');
+            }
+            /*
+
             params.keySet().stream().forEach(key -> {
                 result.append(key).append('=').append(params.get(key)).append('&');
-            });
+            }); */
             return result.toString();
         }
     }
