@@ -17,7 +17,7 @@ import java.util.HashMap;
  */
 public final class VkApi {
 
-    private static final String API_VERSION = "5.21";
+    private static final String API_VERSION = "5.53";
 
     private static final String AUTH_URL = "https://oauth.vk.com/authorize"
             + "?client_id={APP_ID}"
@@ -79,6 +79,13 @@ public final class VkApi {
                 .add("thumb_src", "1"));
     }
 
+    public String getUsers(String userId) throws IOException {
+        return invokeApi("users.get", Params.create()
+                .add("user_ids", userId));
+    }
+
+
+
     private String invokeApi(String method, Params params) throws IOException {
         final String parameters = (params == null) ? "" : params.build();
         String reqUrl = API_REQUEST
@@ -91,12 +98,20 @@ public final class VkApi {
     private static String invokeApi(String requestUrl) throws IOException {
         final StringBuilder result = new StringBuilder();
         final URL url = new URL(requestUrl);
+
+        String currentLine;
         try (InputStream is = url.openStream()) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-            while (reader.readLine() != null) {
+            while ((currentLine = reader.readLine()) != null) {
                 result.append(reader.readLine());
+                System.out.println(currentLine);
             }
         }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            System.out.println(e.getStackTrace().toString());
+        }
+
         return result.toString();
     }
 
