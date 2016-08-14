@@ -13,6 +13,8 @@ import java.net.URL;
  */
 public class Sender {
 
+    static final String URL_PATH_VK_GET_FRIENDS = "https://api.vk.com/method/friends.get?user_id=";
+
     /**
      *
      * @param requestUrl - Get request will be send to this address.
@@ -40,6 +42,17 @@ public class Sender {
 
         String response = responseBuffer.toString();
         return response;
+    }
+
+    /**
+     *
+     * @param userId - userId from https://www.vk.com. For example: 2691570
+     * @return JSON object with array of friends identities;
+     * @throws Exception
+     *
+     */
+    public static String getFriendsFromVkByUserId(int userId) throws Exception {
+        return sendGetRequest(URL_PATH_VK_GET_FRIENDS + userId);
     }
 
 }

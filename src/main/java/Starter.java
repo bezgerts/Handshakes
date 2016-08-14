@@ -1,27 +1,35 @@
-import vk.VkApi;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import java.io.IOException;
+import java.util.Scanner;
 
 /**
- * Created by bezgerts on 12.08.16.
+ * Starter fo SevenHandshakesApplication&
  */
 public class Starter {
     public static void main(String[] args) {
-     /*
-        try {
-        VkApi vkApi = VkApi.with("5585015", "Q5SUCeZNXF1JUdPkuOwP");
-            vkApi.getUsers("2691570");
+        Scanner scanner = new Scanner(System.in);
+        int userId = Integer.parseInt(scanner.nextLine());
+
+
+         try {
+             String response = Sender.getFriendsFromVkByUserId(userId);
+             System.out.println(response);
+
+             JSONObject obj = new JSONObject(response);
+             JSONArray array = obj.getJSONArray("response");
+
+             for (int i = 0; i < array.length(); i++){
+                 System.out.println(array.getInt(i));
+
+             }
+
+             System.out.println("Friends count: " + array.length());
+
+
+        } catch (Exception e){
+             System.out.println(e.getMessage());
         }
-        catch (IOException e){
-            System.out.println(e.getMessage());
-        }
-         */
-     try {
-         String responseFromGoogle = Sender.sendGetRequest("https://api.vk.com/method/friends.get?user_id=2691570");
-         System.out.println(responseFromGoogle);
-     } catch (Exception e){
-         System.out.println(e.getMessage());
-     }
 
     }
 
