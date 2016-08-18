@@ -55,6 +55,54 @@ public class Handshake {
                                     + ProvidingService.getUserName(friends.get(1).get(j)) + ": "
                                     + ProvidingService.getUserName(targetUserId));
                         }
+                        if(searchDepth > 3){
+                            for (int k = 0; k < friends.get(2).size(); k++) {
+                                friends.add(3, ProvidingService.getFriendsFromVk(friends.get(2).get(k)));
+                                checkResult = ProvidingService.checkId(targetUserId, friends.get(3));
+                                if (checkResult) {
+                                    System.out.println("Handshake: " + ProvidingService.getUserName(userId)  + ": "
+                                            + ProvidingService.getUserName(friends.get(0).get(i)) + ": "
+                                            + ProvidingService.getUserName(friends.get(1).get(j)) + ": "
+                                            + ProvidingService.getUserName(friends.get(2).get(k)) + ": "
+                                            + ProvidingService.getUserName(targetUserId));
+                                }
+
+                                if (searchDepth > 4) {
+                                    for (int l = 0; l < friends.get(3).size(); l++) {
+                                        friends.add(4, ProvidingService.getFriendsFromVk(friends.get(3).get(l)));
+                                        checkResult = ProvidingService.checkId(targetUserId, friends.get(4));
+                                        if (checkResult) {
+                                            System.out.println("Handshake: "
+                                                    + ProvidingService.getUserName(userId)  + ": "
+                                                    + ProvidingService.getUserName(friends.get(0).get(i)) + ": "
+                                                    + ProvidingService.getUserName(friends.get(1).get(j)) + ": "
+                                                    + ProvidingService.getUserName(friends.get(2).get(k)) + ": "
+                                                    + ProvidingService.getUserName(friends.get(3).get(l)) + ": "
+                                                    + ProvidingService.getUserName(targetUserId));
+                                        }
+                                        if (searchDepth > 5) {
+                                            for (int m = 0; m < friends.get(4).size(); m++) {
+                                                friends.add(5, ProvidingService.getFriendsFromVk(friends.get(4).get(m)));
+                                                checkResult = ProvidingService.checkId(targetUserId, friends.get(5));
+                                                if (checkResult) {
+                                                    System.out.println("Handshake: "
+                                                            + ProvidingService.getUserName(userId)  + ": "
+                                                            + ProvidingService.getUserName(friends.get(0).get(i)) + ": "
+                                                            + ProvidingService.getUserName(friends.get(1).get(j)) + ": "
+                                                            + ProvidingService.getUserName(friends.get(2).get(k)) + ": "
+                                                            + ProvidingService.getUserName(friends.get(3).get(l)) + ": "
+                                                            + ProvidingService.getUserName(friends.get(4).get(l)) + ": "
+                                                            + ProvidingService.getUserName(targetUserId));
+                                                }
+                                                friends.remove(5);
+                                            }
+                                        }
+                                        friends.remove(4);
+                                    }
+                                }
+                                friends.remove(3);
+                            }
+                        }
                         friends.remove(2);
                     }
                 }
