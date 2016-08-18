@@ -32,22 +32,33 @@ public class Handshake {
 
         checkResult = ProvidingService.checkId(targetUserId, friends.get(0));
         if (checkResult) {
-            System.out.println("Handshake: " + userId + ": " + targetUserId);
+            System.out.println("Handshake: " + ProvidingService.getUserName(userId) +
+                                                        ": " + ProvidingService.getUserName(targetUserId));
         }
 
         if (searchDepth > 1) {
-            for (int i = 0; i < friends.get(0).size(); i++) {
+            for (int i = 81; i < friends.get(0).size(); i++) {
                 friends.add(1, ProvidingService.getFriendsFromVk(friends.get(0).get(i)));
                 checkResult = ProvidingService.checkId(targetUserId, friends.get(1));
                 if (checkResult){
-                    System.out.println("Handshake: " + userId + ": "
-                            + friends.get(0).get(i) + ": "
-                            + targetUserId);
+                    System.out.println("Handshake: " + ProvidingService.getUserName(userId) + ": "
+                            + ProvidingService.getUserName(friends.get(0).get(i))  + ": "
+                            + ProvidingService.getUserName(targetUserId));
+                }
+                if (searchDepth > 2){
+                    for (int j = 0; j < friends.get(1).size(); j++) {
+                        friends.add(2, ProvidingService.getFriendsFromVk(friends.get(1).get(j)));
+                        checkResult = ProvidingService.checkId(targetUserId, friends.get(2));
+                        if (checkResult) {
+                            System.out.println("Handshake: " + ProvidingService.getUserName(userId)  + ": "
+                                    + ProvidingService.getUserName(friends.get(0).get(i)) + ": "
+                                    + ProvidingService.getUserName(friends.get(1).get(j)) + ": "
+                                    + ProvidingService.getUserName(targetUserId));
+                        }
+                        friends.remove(2);
+                    }
                 }
                 friends.remove(1);
-                if (searchDepth > 2){
-
-                }
             }
         }
     }

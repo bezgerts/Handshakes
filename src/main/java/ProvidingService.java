@@ -15,6 +15,10 @@ import java.util.ArrayList;
  */
 public class ProvidingService {
 
+    static final String URL_PATH_VK_GET_FRIENDS = "https://api.vk.com/method/friends.get?user_id=";
+
+    static final String URL_PATH_VK_GET_USER_INFO = "https://api.vk.com/method/users.get?user_id=";
+
     /**
      *
      * This method sends get request.
@@ -46,7 +50,6 @@ public class ProvidingService {
         return response;
     }
 
-    static final String URL_PATH_VK_GET_FRIENDS = "https://api.vk.com/method/friends.get?user_id=";
     /**
      *
      * This method gets friends of user from https://www.vk.com.
@@ -77,6 +80,40 @@ public class ProvidingService {
         }
 
         return userFriendsList;
+    }
+
+    /**
+     *
+     * This method returns full name of user.
+     *
+     * @param userId
+     * @return - string with first and last names
+     *
+     */
+    public static String getUserName(int userId){
+        String name = null;
+        try {
+            String response = sendGetRequest(URL_PATH_VK_GET_USER_INFO + userId);
+            JSONObject obj = new JSONObject(response);
+            JSONObject object;
+            if (obj.has("response")){
+                JSONArray array = obj.getJSONArray("response");
+                int len = array.length();
+                String s;
+                for (int i=0;i<len;i++){
+                    s = array.get(i).toString();
+                    object = new JSONObject(s);
+                    name = object.getString("first_name") + " "
+                                        + object.getString("last_name")
+                                        + " (userId: " + userId + ")";
+                }
+            }
+
+        }
+        catch (Exception e){
+            System.out.println("Exception. UserID: " + userId + ". Message: " + e.getMessage());
+        }
+        return name;
     }
 
     /**

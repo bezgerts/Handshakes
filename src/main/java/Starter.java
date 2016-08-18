@@ -16,8 +16,8 @@ public class Starter {
         int targetUserId = Integer.parseInt(scanner.nextLine());
 */
         try {
-            Handshake handshake = new Handshake(2691570, 1785797);
-            handshake.find(2);
+            Handshake handshake = new Handshake(2691570, 16404350);
+            handshake.find(3);
         } catch (Exception e){
              System.out.println(e.getMessage());
         }
