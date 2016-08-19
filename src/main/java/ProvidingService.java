@@ -82,6 +82,7 @@ public class ProvidingService {
         return userFriendsList;
     }
 
+
     /**
      *
      * This method returns full name of user.
@@ -132,6 +133,23 @@ public class ProvidingService {
             }
         }
         return result;
+    }
+
+    /**
+     *
+     * This method saves results from ArrayList to String.
+     *
+     * @param results - arrayList with results
+     * @return string with results.
+     *
+     */
+    public static String resultToString(ArrayList<String> results){
+        StringBuffer str = new StringBuffer();
+        for (String s :
+                results) {
+            str.append(s);
+        }
+        return str.toString();
     }
 }
 
