@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * @author bezgerts
  *
  */
-public class Handshake {
+public class Handshake implements Runnable {
     private int userId;
     private int targetUserId;
     private int searchDepth;
@@ -16,21 +16,33 @@ public class Handshake {
     private boolean checkResult;
     private ArrayList<String> resultString;
 
-    public Handshake(int userId, int targetUserId, int searchDepth) {
-        this.userId = userId;
-        this.targetUserId = targetUserId;
-        this.searchDepth = searchDepth;
-
+    private Handshake(){
         this.resultString = new ArrayList<>();
         this.resultString.add(0, "Handshake: " + ProvidingService.getUserName(this.userId) +
-                                                " & " + ProvidingService.getUserName(targetUserId) + " || ");
+                " & " + ProvidingService.getUserName(targetUserId) + " || ");
 
         this.counter = 0;
         this.checkResult = false;
     }
 
+    public Handshake(int userId, int targetUserId, int searchDepth) {
+        this();
+        this.userId = userId;
+        this.targetUserId = targetUserId;
+        this.searchDepth = searchDepth;
+    }
+
+    public Handshake(ArrayList<Integer> friends, int targetUserId, int searchDepth) {
+        this();
+        this.targetUserId = targetUserId;
+        this.searchDepth = searchDepth;
+        this.friends = friends;
+    }
 
     public void findWithRecursion(int id){
+        if (counter < 1) {
+            System.out.println("Check user: " + ProvidingService.getUserName(id) + " with ID: " + id);
+        }
         counter++;
         if (counter > searchDepth) {
             counter--;
@@ -52,7 +64,9 @@ public class Handshake {
     }
 
     void find() {
-        friends = ProvidingService.getFriendsFromVk(userId);
+        if (userId != 0) {
+            friends = ProvidingService.getFriendsFromVk(userId);
+        }
         checkResult = ProvidingService.checkId(targetUserId, friends);
         if (checkResult) {
             System.out.println(ProvidingService.resultToString(resultString));
@@ -62,6 +76,11 @@ public class Handshake {
             findWithRecursion(friend);
         }
         friends.clear();
+    }
+
+    @Override
+    public void run() {
+        this.find();
     }
 }
 
