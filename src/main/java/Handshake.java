@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * @author bezgerts
  *
  */
-public class Handshake implements Runnable {
+public class Handshake {
     private int userId;
     private int targetUserId;
     private int searchDepth;
@@ -25,18 +25,10 @@ public class Handshake implements Runnable {
         this.checkResult = false;
     }
 
-    public Handshake(int userId, int targetUserId, int searchDepth) {
-        this();
-        this.userId = userId;
-        this.targetUserId = targetUserId;
-        this.searchDepth = searchDepth;
-    }
-
-    public Handshake(ArrayList<Integer> friends, int targetUserId, int searchDepth) {
+    public Handshake(int targetUserId, int searchDepth) {
         this();
         this.targetUserId = targetUserId;
         this.searchDepth = searchDepth;
-        this.friends = friends;
     }
 
     public void findWithRecursion(int id){
@@ -63,10 +55,13 @@ public class Handshake implements Runnable {
         counter--;
     }
 
-    void find() {
-        if (userId != 0) {
-            friends = ProvidingService.getFriendsFromVk(userId);
-        }
+    void find(int userId) {
+        this.userId = userId;
+        this.find(ProvidingService.getFriendsFromVk(userId));
+    }
+
+    void find(ArrayList<Integer> friends) {
+        this.friends = friends;
         checkResult = ProvidingService.checkId(targetUserId, friends);
         if (checkResult) {
             System.out.println(ProvidingService.resultToString(resultString));
@@ -76,11 +71,6 @@ public class Handshake implements Runnable {
             findWithRecursion(friend);
         }
         friends.clear();
-    }
-
-    @Override
-    public void run() {
-        this.find();
     }
 }
 

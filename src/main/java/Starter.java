@@ -17,14 +17,12 @@ public class Starter {
             String targetUserId = args[1];
             String searchDepth = args[2];
 
-
-            Handshake handshake = new Handshake(Integer.parseInt(userId), Integer.parseInt(targetUserId), Integer.parseInt(searchDepth));
-
+            Handshake handshake = new Handshake(Integer.parseInt(targetUserId), Integer.parseInt(searchDepth));
 
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
             System.out.println(timeStamp);
 
-            handshake.find();
+            handshake.find(Integer.parseInt(userId));
             timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
             System.out.println(timeStamp);
         } catch (Exception e){
