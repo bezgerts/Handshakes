@@ -8,7 +8,7 @@ public class Starter {
     public static void main(String[] args) {
         if (args.length != 3) {
             System.out.println("Sample usage of the program:" +
-                    "java -jar handshake.jar -2691570 -273251945 -3");
+                    "java -jar handshake.jar 2691570 273251945 3");
             System.exit(0);
         }
 
