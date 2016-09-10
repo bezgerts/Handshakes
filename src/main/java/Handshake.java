@@ -10,30 +10,30 @@ public class Handshake {
     private int userId;
     private int targetUserId;
     private int searchDepth;
+    private String threadName;
 
     private ArrayList<Integer> friends;
     private int counter;
     private boolean checkResult;
     private ArrayList<String> resultString;
 
-    private Handshake(){
+
+    public Handshake(int userId, int targetUserId, int searchDepth, String threadName) {
+        this.targetUserId = targetUserId;
+        this.searchDepth = searchDepth;
+        this.userId = userId;
+        this.threadName = threadName;
         this.resultString = new ArrayList<>();
-        this.resultString.add(0, "Handshake: " + ProvidingService.getUserName(this.userId) +
+        this.resultString.add(0, threadName + " Handshake: " + ProvidingService.getUserName(this.userId) +
                 " & " + ProvidingService.getUserName(targetUserId) + " || ");
 
         this.counter = 0;
         this.checkResult = false;
     }
 
-    public Handshake(int targetUserId, int searchDepth) {
-        this();
-        this.targetUserId = targetUserId;
-        this.searchDepth = searchDepth;
-    }
-
     public void findWithRecursion(int id){
         if (counter < 1) {
-            System.out.println("Check user: " + ProvidingService.getUserName(id) + " with ID: " + id);
+            System.out.println(threadName + ": Check user: " + ProvidingService.getUserName(id) + " with ID: " + id);
         }
         counter++;
         if (counter > searchDepth) {
