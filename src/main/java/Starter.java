@@ -1,6 +1,7 @@
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Starter for HandshakesApplication.
@@ -18,18 +19,13 @@ public class Starter {
             int targetUserId = Integer.parseInt(args[1]);
             int searchDepth = Integer.parseInt(args[2]);
 
-            ArrayList<Integer> friends = ProvidingService.getFriendsFromVk(userId);
+            User user = new User(userId);
+            User targetUser = new User(targetUserId);
 
-
-                HandshakeThread handshakeThread1 = new HandshakeThread(new ArrayList<>(friends.subList(0,199)), userId, targetUserId, searchDepth, "Thread 1");
-                HandshakeThread handshakeThread2 = new HandshakeThread(new ArrayList<>(friends.subList(200,399)), userId, targetUserId, searchDepth, "Thread 2");
-                HandshakeThread handshakeThread3 = new HandshakeThread(new ArrayList<>(friends.subList(400,599)), userId, targetUserId, searchDepth, "Thread 3");
-                HandshakeThread handshakeThread4 = new HandshakeThread(new ArrayList<>(friends.subList(600,700)), userId, targetUserId, searchDepth, "Thread 4");
-                handshakeThread1.start();
-                handshakeThread2.start();
-                handshakeThread3.start();
-                handshakeThread4.start();
-
+            List<List<User>> choppedFriends = ProvidingService.chopped(user.getFriends(), 5);
+            for (int i = 0; i < choppedFriends.size(); i++) {
+                new HandshakeThread(new ArrayList<>(choppedFriends.get(i)), user, targetUser, searchDepth, "Thread " + i).start();
+            }
 
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
             System.out.println(timeStamp);
