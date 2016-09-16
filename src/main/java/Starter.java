@@ -15,6 +15,9 @@ public class Starter {
         }
 
         try {
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+            System.out.println(timeStamp);
+
             int userId = Integer.parseInt(args[0]);
             int targetUserId = Integer.parseInt(args[1]);
             int searchDepth = Integer.parseInt(args[2]);
@@ -23,15 +26,24 @@ public class Starter {
             User targetUser = new User(targetUserId);
 
             List<List<User>> choppedFriends = ProvidingService.chopped(user.getFriends(), 5);
+            Thread[] handshakeThread = new Thread[choppedFriends.size()];
+
             for (int i = 0; i < choppedFriends.size(); i++) {
-                new HandshakeThread(new ArrayList<>(choppedFriends.get(i)), user, targetUser, searchDepth, "Thread " + i).start();
+                handshakeThread[i] = new HandshakeThread(new ArrayList<>(choppedFriends.get(i)), user, targetUser, searchDepth, "Thread " + i);
+                handshakeThread[i].start();
             }
 
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-            System.out.println(timeStamp);
+            for (int i = 0; i < handshakeThread.length; i++) {
+                try {
+                    handshakeThread[i].join();
+                } catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
 
             timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
             System.out.println(timeStamp);
+            System.out.println("Все потоки завершены");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
