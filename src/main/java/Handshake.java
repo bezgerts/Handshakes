@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  *
@@ -10,32 +11,23 @@ public class Handshake {
     private User user;
     private User targetUser;
     private int searchDepth;
-
-    private String threadName;
-
+    private CopyOnWriteArrayList<ArrayList<String>> result;
     private ArrayList<User> friends;
+    private ArrayList<String> chainOfFriends;
     private int counter;
     private boolean checkResult;
-    private ArrayList<String> resultString;
 
 
-    public Handshake(User user, User targetUser, int searchDepth, String threadName) {
+    public Handshake(User user, User targetUser, int searchDepth, CopyOnWriteArrayList<ArrayList<String>> result, String threadName) {
         this.targetUser = targetUser;
         this.searchDepth = searchDepth;
         this.user = user;
-        this.threadName = threadName;
-        this.resultString = new ArrayList<>();
-        this.resultString.add(0, threadName + " Handshake: " + user.getName() +
-                " & " + targetUser.getName() + "  || ");
+        this.result = result;
+        this.chainOfFriends = new ArrayList<>();
+        this.chainOfFriends.add(threadName);
     }
 
     public void findWithRecursion(int id){
-        /**
-         * if (counter < 1) {
-         System.out.println(threadName + ": Check user: " + ProvidingService.getUserName(id) + " with ID: " + id);
-         }
-         */
-
         counter++;
         if (counter > searchDepth) {
             counter--;
@@ -43,15 +35,15 @@ public class Handshake {
         } else {
             friends = ProvidingService.getFriendsFromVk(id);
             checkResult = ProvidingService.checkId(targetUser.getId(), friends);
-            resultString.add(ProvidingService.getUserName(id) + " : ");
+            chainOfFriends.add(ProvidingService.getUserName(id));
             if (checkResult) {
-                System.out.println(ProvidingService.resultToString(resultString));
+                result.add(new ArrayList<String>(chainOfFriends));
             }
             for (User friend :
                     friends) {
                 findWithRecursion(friend.getId());
             }
-            resultString.remove(counter);
+            chainOfFriends.remove(counter);
         }
         counter--;
     }
@@ -60,17 +52,13 @@ public class Handshake {
         this.friends = friends;
         checkResult = ProvidingService.checkId(targetUser.getId(), friends);
         if (checkResult) {
-            System.out.println(ProvidingService.resultToString(resultString));
+            result.add(new ArrayList<String>(chainOfFriends));
         }
         for (User friend :
                 friends) {
             findWithRecursion(friend.getId());
         }
         friends.clear();
-    }
-
-    void find(){
-      this.find(user.getFriends());
     }
 }
 

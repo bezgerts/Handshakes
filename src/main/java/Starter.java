@@ -2,6 +2,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Starter for HandshakesApplication.
@@ -25,11 +26,14 @@ public class Starter {
             User user = new User(userId);
             User targetUser = new User(targetUserId);
 
+            CopyOnWriteArrayList<ArrayList<String>> result = new CopyOnWriteArrayList<>();
+
             List<List<User>> choppedFriends = ProvidingService.chopped(user.getFriends(), 5);
+
             Thread[] handshakeThread = new Thread[choppedFriends.size()];
 
             for (int i = 0; i < choppedFriends.size(); i++) {
-                handshakeThread[i] = new HandshakeThread(new ArrayList<>(choppedFriends.get(i)), user, targetUser, searchDepth, "Thread " + i);
+                handshakeThread[i] = new HandshakeThread(new ArrayList<>(choppedFriends.get(i)), user, targetUser, searchDepth, result, "Thread " + i);
                 handshakeThread[i].start();
             }
 
