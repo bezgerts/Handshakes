@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  *
@@ -7,66 +8,56 @@ import java.util.ArrayList;
  *
  */
 public class Handshake {
-    private int userId;
-    private int targetUserId;
+    private User user;
+    private User targetUser;
     private int searchDepth;
-
-    private ArrayList<Integer> friends;
+    private CopyOnWriteArrayList<ArrayList<String>> result;
+    private ArrayList<User> friends;
+    private ArrayList<String> chainOfFriends;
     private int counter;
     private boolean checkResult;
-    private ArrayList<String> resultString;
 
-    private Handshake(){
-        this.resultString = new ArrayList<>();
-        this.resultString.add(0, "Handshake: " + ProvidingService.getUserName(this.userId) +
-                " & " + ProvidingService.getUserName(targetUserId) + " || ");
 
-        this.counter = 0;
-        this.checkResult = false;
-    }
-
-    public Handshake(int targetUserId, int searchDepth) {
-        this();
-        this.targetUserId = targetUserId;
+    public Handshake(User user, User targetUser, int searchDepth,
+                     CopyOnWriteArrayList<ArrayList<String>> result,
+                     String threadName) {
+        this.targetUser = targetUser;
         this.searchDepth = searchDepth;
+        this.user = user;
+        this.result = result;
+        this.chainOfFriends = new ArrayList<>();
+        this.chainOfFriends.add(threadName);
     }
 
-    public void findWithRecursion(int id){
-        if (counter < 1) {
-            System.out.println("Check user: " + ProvidingService.getUserName(id) + " with ID: " + id);
-        }
+    public void findWithRecursion(User user){
         counter++;
         if (counter > searchDepth) {
             counter--;
             return;
         } else {
-            friends = ProvidingService.getFriendsFromVk(id);
-            checkResult = ProvidingService.checkId(targetUserId, friends);
-            resultString.add(ProvidingService.getUserName(id) + " : ");
+            friends = ProvidingService.getFriendsFromVk(user.getId());
+            checkResult = ProvidingService.checkId(targetUser.getId(), friends);
+            chainOfFriends.add(ProvidingService.getUserName(user.getId()));
             if (checkResult) {
-                System.out.println(ProvidingService.resultToString(resultString));
+                result.add(new ArrayList<String>(chainOfFriends));
+                System.out.println(chainOfFriends);
             }
-            for (Integer friend :
+            for (User friend :
                     friends) {
                 findWithRecursion(friend);
             }
-            resultString.remove(counter);
+            chainOfFriends.remove(counter);
         }
         counter--;
     }
 
-    void find(int userId) {
-        this.userId = userId;
-        this.find(ProvidingService.getFriendsFromVk(userId));
-    }
-
-    void find(ArrayList<Integer> friends) {
+    void find(ArrayList<User> friends) {
         this.friends = friends;
-        checkResult = ProvidingService.checkId(targetUserId, friends);
+        checkResult = ProvidingService.checkId(targetUser.getId(), friends);
         if (checkResult) {
-            System.out.println(ProvidingService.resultToString(resultString));
+            result.add(new ArrayList<String>(chainOfFriends));
         }
-        for (Integer friend :
+        for (User friend :
                 friends) {
             findWithRecursion(friend);
         }
