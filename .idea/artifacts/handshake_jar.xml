@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="HandshakesApplication:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/HandshakesApplication_jar</output-path>
+  <artifact type="jar" build-on-make="true" name="handshake:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/handshake_jar</output-path>
     <root id="archive" name="HandshakesApplication.jar">
       <element id="module-output" name="HandshakesApplication" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/json/json/20090211/json-20090211.jar" path-in-jar="/" />

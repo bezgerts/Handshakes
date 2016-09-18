@@ -11,8 +11,10 @@ public class HandshakeThread extends Thread {
     private int searchDepth;
     private CopyOnWriteArrayList<ArrayList<String>> result;
     private String threadName;
-
-    public HandshakeThread(ArrayList<User> friends, User user, User targetUser, int searchDepth, CopyOnWriteArrayList<ArrayList<String>> result, String threadName){
+    public HandshakeThread(ArrayList<User> friends, User user,
+                           User targetUser, int searchDepth,
+                           CopyOnWriteArrayList<ArrayList<String>> result,
+                           String threadName){
         this.friends = friends;
         this.user = user;
         this.targetUser = targetUser;

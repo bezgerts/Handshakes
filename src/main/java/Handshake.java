@@ -18,7 +18,9 @@ public class Handshake {
     private boolean checkResult;
 
 
-    public Handshake(User user, User targetUser, int searchDepth, CopyOnWriteArrayList<ArrayList<String>> result, String threadName) {
+    public Handshake(User user, User targetUser, int searchDepth,
+                     CopyOnWriteArrayList<ArrayList<String>> result,
+                     String threadName) {
         this.targetUser = targetUser;
         this.searchDepth = searchDepth;
         this.user = user;
@@ -27,21 +29,22 @@ public class Handshake {
         this.chainOfFriends.add(threadName);
     }
 
-    public void findWithRecursion(int id){
+    public void findWithRecursion(User user){
         counter++;
         if (counter > searchDepth) {
             counter--;
             return;
         } else {
-            friends = ProvidingService.getFriendsFromVk(id);
+            friends = ProvidingService.getFriendsFromVk(user.getId());
             checkResult = ProvidingService.checkId(targetUser.getId(), friends);
-            chainOfFriends.add(ProvidingService.getUserName(id));
+            chainOfFriends.add(ProvidingService.getUserName(user.getId()));
             if (checkResult) {
                 result.add(new ArrayList<String>(chainOfFriends));
+                System.out.println(chainOfFriends);
             }
             for (User friend :
                     friends) {
-                findWithRecursion(friend.getId());
+                findWithRecursion(friend);
             }
             chainOfFriends.remove(counter);
         }
@@ -56,7 +59,7 @@ public class Handshake {
         }
         for (User friend :
                 friends) {
-            findWithRecursion(friend.getId());
+            findWithRecursion(friend);
         }
         friends.clear();
     }
