@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -55,21 +56,22 @@ public class ProvidingService {
      * This method gets friends of user from https://www.vk.com.
      *
      * @param userId - userId from https://www.vk.com. For example: 2691570
-     * @return ArrayList<Integer> with IDs of friends;
+     * @return ArrayList<User> with friends;
      *
      */
-    public static ArrayList<Integer> getFriendsFromVk(int userId) {
-        ArrayList<Integer> userFriendsList = new ArrayList<>();
+    public static ArrayList<User> getFriendsFromVk(int userId) {
+        ArrayList<User> userFriendsList = new ArrayList<>();
         try {
             String response = sendGetRequest(URL_PATH_VK_GET_FRIENDS + userId);
-
+            int id;
             JSONObject obj = new JSONObject(response);
             if (obj.has("response")) {
                 JSONArray array = obj.getJSONArray("response");
                 if (array != null) {
                     int len = array.length();
                     for (int i=0;i<len;i++){
-                        userFriendsList.add(Integer.parseInt(array.get(i).toString()));
+                        id = Integer.parseInt(array.get(i).toString());
+                        userFriendsList.add(new User(id));
                     }
                 }
             }
@@ -124,11 +126,11 @@ public class ProvidingService {
      * @param friendList
      *
      */
-    public static boolean checkId(int id, ArrayList<Integer> friendList){
+    public static boolean checkId(int id, ArrayList<User> friendList){
         boolean result = false;
-        for (Integer f :
+        for (User user :
                 friendList) {
-            if (f == id) {
+            if (user.getId() == id) {
                 result = true;
             }
         }
@@ -150,6 +152,27 @@ public class ProvidingService {
             str.append(s);
         }
         return str.toString();
+    }
+
+    /**
+     *
+     * This method splits splits the array into several arrays of length L;
+     *
+     * @param list = Array that will be chopped;
+     * @param L = Size of a chopped array part;
+     *
+     * @return Array of array's parts.
+     *
+     */
+    static <T> List<List<T>> chopped(List<T> list, final int L) {
+        List<List<T>> parts = new ArrayList<List<T>>();
+        final int N = list.size();
+        for (int i = 0; i < N; i += L) {
+            parts.add(new ArrayList<T>(
+                    list.subList(i, Math.min(N, i + L)))
+            );
+        }
+        return parts;
     }
 }
 
